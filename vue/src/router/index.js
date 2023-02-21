@@ -5,33 +5,61 @@ import Surveys from '../views/Surveys.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import DefaultLayout from '../layouts/Default.vue';
+import AuthLayout from '../layouts/Auth.vue';
+import store from '../store/store.js';
 
 const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
+
   {
     path: '/',
     redirect: '/dashboard',
     name: 'Dashboard',
     component: DefaultLayout,
+    // om bij /dashboard te komen is authenticatie nodig
+    meta: { requiresAuth: true },
     children: [
-      {path: '/dashboard', name: 'Dashboard', component: Dashboard},
-      {path: '/surveys', name: 'Surveys', component: Surveys}
+      { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+      { path: '/surveys', name: 'Surveys', component: Surveys }
     ]
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: Register
+    path: '/auth',
+    redirect: '/login',
+    name: 'Auth',
+    component: AuthLayout,
+    meta: { isGuest: true },
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: Login
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: Register
+      },
+    ]
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // Als onze 'to' route authorisatie nodig heeft, en er is geen token
+  if (to.meta.requiresAuth && !store.state.user.token) {
+    // Volgende pagina login
+    next({ name: 'Login' })
+    // Als een ingelogde gebruiker naar login of register probeert te gaan
+  } else if (store.state.user.token && (to.meta.isGuest)) {
+    next({ name: 'Dashboard' })
+  } else {
+    // Volgende pagina waar user naartoe wil
+    next()
+  }
 })
 
 export default router;

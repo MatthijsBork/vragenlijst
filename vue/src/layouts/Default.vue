@@ -1,11 +1,4 @@
-<template><!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-gray-100">
-  <body class="h-full">
-  ```
--->
+<template>
   <div class="min-h-full">
     <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
