@@ -6,14 +6,13 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import DefaultLayout from '../layouts/Default.vue';
 import AuthLayout from '../layouts/Auth.vue';
-import store from '../store/store.js';
+import store from '../store/index.js';
 
 const routes = [
 
   {
     path: '/',
     redirect: '/dashboard',
-    name: 'Dashboard',
     component: DefaultLayout,
     // om bij /dashboard te komen is authenticatie nodig
     meta: { requiresAuth: true },
