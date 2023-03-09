@@ -22,7 +22,6 @@ class AuthController extends Controller
             ]
         ]);
 
-        /** @var \App\Models\User $user */
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -67,7 +66,7 @@ class AuthController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        // Revoke the token that was used to authenticate the current request...
+        // Verwijder het huidige token
         $user->currentAccessToken()->delete();
 
         return response([

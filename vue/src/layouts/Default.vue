@@ -127,9 +127,13 @@ export default {
     const router = useRouter()
 
     function logout() {
-      store.commit('logout')
-      router.push({
-        name: 'Login'
+      // Wanneer de backend returnt dat de token is verwijderd
+      store.dispatch('logout').then(() => {
+        // Redirect naar login
+        router.push({
+          name: 'Login'
+        })
+
       })
     }
 
