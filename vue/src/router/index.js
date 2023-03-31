@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import SurveyView from '../views/SurveyView.vue'
 import Dashboard from '../views/Dashboard.vue';
+import Register from '../views/Register.vue';
 import Surveys from '../views/Surveys.vue';
 import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
 import DefaultLayout from '../layouts/Default.vue';
 import AuthLayout from '../layouts/Auth.vue';
 import store from '../store/index.js';
-import SurveyView from '../views/SurveyView.vue'
 
 const routes = [
   {
