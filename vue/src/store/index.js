@@ -93,6 +93,8 @@ const store = createStore({
     },
     // ... = spread operator. Maakt een kopie van tmpSurveys
     surveys: [...tmpSurveys],
+    // Alle beschikbare types voor survey vragen vaststellen.
+    questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
   },
   getters: {},
   actions: {
