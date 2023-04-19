@@ -3,7 +3,7 @@
 <template>
   <div class="flex items-center justify-between">
     <h3 class="text-lg font-bold">
-      <!-- index + 1, eerste vraag zal namelijk 0 zijn -->
+      <!-- index + 1, eerste item zal namelijk 0 zijn -->
       {{ index + 1 }} {{ model.question }}
     </h3>
 
@@ -111,6 +111,7 @@
 
 import { ref, computed } from 'vue';
 import store from '../../store';
+import {v4 as uuid} from 'uuid';
 
 const props = defineProps({
   question: Object,
@@ -119,7 +120,7 @@ const props = defineProps({
 
 
 // Definieer events
-const emit = defineEmits(['change', 'addQuestion'], 'deleteQuestion');
+const emit = defineEmits(['change', 'addQuestion', 'deleteQuestion']);
 
 // Hier maken we de vraag-data opnieuw om onbedoelde referance veranderingen te voorkomen
 const model = ref(JSON.parse(JSON.stringify(props.question)));
@@ -147,7 +148,7 @@ function setOptions(options) {
 function addOption() {
   setOptions([
     ...getOptions(),
-    { uuid: uuidv4(), text: '' }
+    { uuid: uuid(), text: '' }
   ]);
   dataChange();
 }
@@ -171,14 +172,24 @@ function typeChange() {
 }
 
 function dataChange() {
-  const data = model.value;
+  // Wat dit in principe doet, is een clone van model.value maken.
+  // Zo verliezen we de data niet als we de option type veranderen
+  const data =  JSON.parse(JSON.stringify(model.value));
   // als de vraag geen opties moet hebben, verwijder opties voor die vraag
   if (!shouldHaveOptions()) {
     delete data.data.options;
   }
+
+  emit('change', data);
 }
 
-// TODO: uuidv4 functie maken, zodat opties gemaakt kunnen worden.
+function addQuestion() {
+  emit('addQuestion');
+}
+
+function deleteQuestion() {
+  emit('deleteQuestion', props.question);
+}
 
 </script>
 

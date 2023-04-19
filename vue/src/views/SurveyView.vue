@@ -107,11 +107,12 @@
   </Page>
 </template>
 <script setup>
-import { ref } from "vue";
-import store from "../store";
-import { useRoute } from "vue-router";
+import { ref } from 'vue';
+import store from '../store';
+import { useRoute } from 'vue-router';
 import Page from '../components/Page.vue';
 import QuestionEditor from '../components/editors/QuestionEditor.vue';
+import { v4 as uuid } from 'uuid';
 
 const route = useRoute();
 
@@ -129,4 +130,21 @@ if (route.params.id) {
     (s) => s.id === parseInt(route.params.id)
   );
 }
+
+function addQuestion() {
+  const newQuestion = {
+    id: uuid(),
+    type: 'text',
+    question: '',
+    description: null,
+    data: {}
+  }
+
+  model.value.questions.push(newQuestion);
+}
+
+function deleteQuestion(question) {
+  model.value.questions.splice(model.value.questions.findIndex(q => q.id === question.id), 1);
+}
+
 </script>
