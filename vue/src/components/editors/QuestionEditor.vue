@@ -56,7 +56,7 @@
   <div class="mt-3 col-span-9">
     <label :for="'question_description_' + model.id" class="block text-sm font-medium text-gray-700">Question
       Description</label>
-    <textarea :name="'question_description_' + model.id" :id="'question_description_' + model_id" @change="dataChange"
+    <textarea :name="'question_description_' + model.id" :id="'question_description_' + model.id" @change="dataChange"
       v-model="model.description" cols="30" rows="5"
       class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"></textarea>
   </div>
@@ -111,7 +111,7 @@
 
 import { ref, computed } from 'vue';
 import store from '../../store';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 const props = defineProps({
   question: Object,
@@ -174,7 +174,7 @@ function typeChange() {
 function dataChange() {
   // Wat dit in principe doet, is een clone van model.value maken.
   // Zo verliezen we de data niet als we de option type veranderen
-  const data =  JSON.parse(JSON.stringify(model.value));
+  const data = JSON.parse(JSON.stringify(model.value));
   // als de vraag geen opties moet hebben, verwijder opties voor die vraag
   if (!shouldHaveOptions()) {
     delete data.data.options;
@@ -189,6 +189,15 @@ function addQuestion() {
 
 function deleteQuestion() {
   emit('deleteQuestion', props.question);
+}
+
+function questionChange(question) {
+  model.value.questions = model.value.questions.map((q) => {
+    if (q.id === question.id) {
+      return JSON.parse(JSON.stringify(question));
+    }
+    return q;
+  });
 }
 
 </script>
