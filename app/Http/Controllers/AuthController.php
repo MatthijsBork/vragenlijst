@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
-
+use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
+
+    use HasApiTokens, Notifiable;
+
     public function register(Request $request)
     {
         $data = $request->validate([

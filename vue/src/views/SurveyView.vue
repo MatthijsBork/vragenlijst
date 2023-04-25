@@ -10,6 +10,7 @@
     <form @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+          {{ model }}
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Image
@@ -109,16 +110,18 @@
 <script setup>
 import { ref } from 'vue';
 import store from '../store';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Page from '../components/Page.vue';
 import QuestionEditor from '../components/editors/QuestionEditor.vue';
 import { v4 as uuid } from 'uuid';
+
+const router = useRouter();
 
 const route = useRoute();
 
 let model = ref({
   title: "",
-  staus: false,
+  status: false,
   description: null,
   image: null,
   expire_date: null,
@@ -129,6 +132,10 @@ if (route.params.id) {
   model.value = store.state.surveys.find(
     (s) => s.id === parseInt(route.params.id)
   );
+}
+
+if (route.params.id) {
+  store.dispatch("getSurvey", route.params.id);
 }
 
 function addQuestion() {
@@ -147,4 +154,30 @@ function deleteQuestion(question) {
   model.value.questions.splice(model.value.questions.findIndex(q => q.id === question.id), 1);
 }
 
+function questionChange(question) {
+  model.value.questions = model.value.questions.map((q) => {
+    if (q.id === question.id) {
+      return JSON.parse(JSON.stringify(question));
+    }
+    return q;
+  });
+}
+
+function saveSurvey() {
+  let action = "created";
+  if (model.value.id) {
+    action = "updated";
+  }
+  store.dispatch("saveSurvey", { ...model.value }).then(({ data }) => {
+    console.log('test');
+    store.commit("notify", {
+      type: "success",
+      message: "The survey was successfully " + action,
+    });
+    router.push({
+      name: "SurveyView",
+      params: { id: data.data.id },
+    });
+  });
+}
 </script>

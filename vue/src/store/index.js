@@ -20,10 +20,10 @@ const tmpSurveys = [
         description: null,
         data: {
           options: [
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4'},
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4' },
           ]
         }
       }
@@ -47,10 +47,10 @@ const tmpSurveys = [
         description: null,
         data: {
           options: [
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4'},
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4' },
           ]
         }
       }
@@ -74,10 +74,10 @@ const tmpSurveys = [
         description: null,
         data: {
           options: [
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3'},
-            {uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4'},
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA2' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA3' },
+            { uuid: 'f8af96f2-1d80-4632-9e9e-b560670e52ea', text: 'USA4' },
           ]
         }
       }
@@ -98,6 +98,28 @@ const store = createStore({
   },
   getters: {},
   actions: {
+    saveSurvey({ commit }, survey) {
+      console.log(survey);
+      let response;
+      if (survey.id) {
+        console.log('survey ID exists!');
+        response = axiosClient
+          .put(`/survey/${survey.id}`, survey)
+          .then((res) => {
+            console.log(res.data);
+            commit('updateSurvey', res.data);
+            return res;
+          });
+        } else {
+          // Axios: ERR_BAD_RESPONSE hier? fixen!
+          // Lijkt op een probleem met api
+          response = axiosClient.post('/survey', survey).then((res) => {
+          commit('saveSurvey', res.data);
+          return res;
+        });
+      }
+      return response;
+    },
     register({ commit }, user) {
       return axiosClient.post('/register', user).
         then(({ data }) => {
@@ -121,6 +143,17 @@ const store = createStore({
     },
   },
   mutations: {
+    saveSurvey: (state, survey) => {
+      state.surveys = [...state.surveys, survey.data];
+    },
+    updateSurvey: (state, survey) => {
+      state.surveys = state.surveys.map((s) => {
+        if (s.id == survey.data.id) {
+          return survey.data;
+        }
+        return s;
+      });
+    },
     logout: (state) => {
       state.user.data = {};
       state.user.token = null;
