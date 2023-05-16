@@ -3,7 +3,7 @@ import store from './store';
 
 const axiosClient = axios.create({
   baseURL: 'http://localhost:8000/api'
-})
+});
 
 // Op elke request die axios maakt wordt de authorisatie token meegegeven
 axiosClient.interceptors.request.use(config => {

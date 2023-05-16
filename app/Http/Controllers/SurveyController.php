@@ -59,7 +59,7 @@ class SurveyController extends Controller
      */
     public function destroy(Survey $survey, Request $request)
     {
-        $user = $request->user;
+        $user = $request->user();
         if ($user->id !== $survey->user_id) {
             return abort(403, 'Unauthorized');
         } else {

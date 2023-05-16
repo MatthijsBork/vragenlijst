@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class AuthController extends Controller
 {
 
-    use HasApiTokens, Notifiable;
+    // use HasApiTokens, Notifiable;
 
     public function register(Request $request)
     {

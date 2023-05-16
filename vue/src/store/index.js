@@ -144,6 +144,7 @@ const store = createStore({
   },
   mutations: {
     saveSurvey: (state, survey) => {
+      console.log(state.user.token);
       state.surveys = [...state.surveys, survey.data];
     },
     updateSurvey: (state, survey) => {

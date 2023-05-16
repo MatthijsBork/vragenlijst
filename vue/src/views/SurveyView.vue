@@ -169,7 +169,6 @@ function saveSurvey() {
     action = "updated";
   }
   store.dispatch("saveSurvey", { ...model.value }).then(({ data }) => {
-    console.log('test');
     store.commit("notify", {
       type: "success",
       message: "The survey was successfully " + action,
