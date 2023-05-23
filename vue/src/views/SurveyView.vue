@@ -16,7 +16,7 @@
               Image
             </label>
             <div class="mt-1 flex items-center">
-              <img v-if="model.image" :src="model.image" :alt="model.title" class="w-64 h-48 object-cover">
+              <img v-if="model.image_url" :src="model.image_url" :alt="model.title" class="w-64 h-48 object-cover">
               <span v-else class="flex items-center justify-center h-12 w-12 rounded-full overflow-hidden bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-[80%] w-[80%] text-gray-300" viewBox="0 0 20 20"
                   fill="currentColor">
@@ -137,6 +137,20 @@ if (route.params.id) {
 if (route.params.id) {
   store.dispatch("getSurvey", route.params.id);
 }
+
+function onImageChoose(ev) {
+  const file = ev.target.files[0];
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    model.value.image = reader.result;
+
+    model.value.image_url = reader.result;
+    ev.target.value = "";
+  };
+  reader.readAsDataURL(file);
+}
+
 
 function addQuestion() {
   const newQuestion = {

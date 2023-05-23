@@ -99,7 +99,7 @@ const store = createStore({
   getters: {},
   actions: {
     saveSurvey({ commit }, survey) {
-      console.log(survey);
+      delete survey.image_url;
       let response;
       if (survey.id) {
         console.log('survey ID exists!');
@@ -110,10 +110,11 @@ const store = createStore({
             commit('updateSurvey', res.data);
             return res;
           });
-        } else {
-          // Axios: ERR_BAD_RESPONSE hier? fixen!
-          // Lijkt op een probleem met api
-          response = axiosClient.post('/survey', survey).then((res) => {
+      } else {
+        // Axios: ERR_BAD_RESPONSE hier? fixen!
+        // Lijkt op een probleem met api
+        console.log(store.state.user.token);
+        response = axiosClient.post('/survey', survey).then((res) => {
           commit('saveSurvey', res.data);
           return res;
         });
@@ -144,7 +145,6 @@ const store = createStore({
   },
   mutations: {
     saveSurvey: (state, survey) => {
-      console.log(state.user.token);
       state.surveys = [...state.surveys, survey.data];
     },
     updateSurvey: (state, survey) => {
